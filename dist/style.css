@@ -1,0 +1,50 @@
+:root{
+    color: #fffdd0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #cc998d;
+}
+
+.jumbotron {
+    display: flex;
+    justify-content: center;
+    color: #4b0082;
+    width: 100%;
+    font-size: 30px;
+
+}
+
+.team-cards {
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+article {
+    background-color: #4b0082;
+    border-radius: 20px;
+    width: fit-content;
+    margin: 5px;
+    padding: 20px;
+}
+
+article h3 {
+    font-size: 25px;
+    text-align: center;
+}
+
+.manager {
+    color: #f08700;
+    font-weight: bold;
+}
+
+.engineer {
+    color: #09bc8a;
+    font-weight: bold;
+}
+
+.intern {
+    color: #20a4f3;
+    font-weight: bold;
+}
