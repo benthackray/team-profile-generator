@@ -1,10 +1,12 @@
-const js = require("fs");
+const fs = require("fs");
 const inquirer = require('inquirer');
+const Employee = require("./lib/Employee")
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const Employee = require("./lib/Employee");
-const { writeFile } = require("fs");
+
+let data;
+const employees = [];
 
 function newEmployee() {
     inquirer.prompt([{
@@ -32,32 +34,120 @@ function newEmployee() {
         ],
         name: 'role',
     }
-    ])
-
-        .then(function ({ name, id, email, role }) {
-            if (role === 'Manager') {
-                inquirer.prompt([{
-                    type: 'input',
-                    message: 'What is their office number?',
-                    name: 'office'
-                }])
-            } else if (role === 'Engineer') {
-                inquirer.prompt([{
-                    type: 'input',
-                    message: 'What is their GitHub username?',
-                    name: 'github'
-                }])
+    ]) 
+    
+        .then(function (response) {
+            data = response
+            let classPrompt;
+            if (response.role === "Manager") {
+                classPrompt = 'What is their office number?';
+            } else if (response.role === "Engineer") {
+                classPrompt = 'What is their GitHub username?';
             } else {
-                inquirer.prompt([{
-                    type: 'input',
-                    message: 'What school do they attend?',
-                    name: 'school'
-                }])}
-        })
+                classPrompt = 'What school do they attend?';
+            }
+            inquirer.prompt([{
+                type: 'input',
+                message: `${classPrompt}`,
+                name: 'classInfo'
+            },
+            {
+                type: "list",
+                message: 'Would you like to add another member?',
+                choices: [
+                    'Yes',
+                    'No'
+                ],
+                name: 'another'
+            }])
+                .then(function (response) {
+                    data.classInfo = response.classInfo
+                    let employee;
+                    // console.log(data);
+                    if (data.role === 'Manager') {
+                        employee = new Manager(data.name, data.id, data.email, data.classInfo)
 
+                    } else if (data.role === 'Engineer') {
+                        employee = new Engineer(data.name, data.id, data.email, data.classInfo)
+
+                    } else {
+                        employee = new Intern(data.name, data.id, data.email, data.classInfo)
+                    }
+                    employees.push(employee);
+                    if(response.another === "Yes") {
+                        newEmployee()
+                    }else {
+                        endHTML()
+                    }
+                })
+        })
 }
 
+function endHTML() {
+    fs.writeFile("./dist/profiles.html", startHTML, function (err) {
+        if (err) {
+            return reject(err);
+        };
+        
+    });
+    console.log(employees);
+    employees.forEach(employee => {
+        // hard coding the html
+        const managerHTML = `        <article>
+<h3>${employee.name}</h3>
+<p class="manager">Manager</p>
+<p>ID: ${employee.id}</p>
+<p>Email: ${employee.email} </p>
+<p>Office Number: ${employee.office} </p>
+</article>`
 
+const engineerHTML = `        <article>
+<h3>${employee.name}</h3>
+<p class="engineer">Engineer</p>
+<p>ID: ${employee.id}</p>
+<p>Email: ${employee.email} </p>
+<p>GitHub: ${employee.github} </p>
+</article>`
+
+const internHTML = `        <article>
+<h3>${employee.name}</h3>
+<p class="intern">Intern</p>
+<p>ID: ${employee.id}</p>
+<p>Email: ${employee.email} </p>
+<p>School: ${employee.school} </p>
+</article>`
+
+        console.log(employee.name);
+        if (employee.office) {
+            fs.appendFile("./dist/profiles.html", managerHTML, function (err) {
+                if (err) {
+                    return reject(err);
+                };
+                
+            });
+        } else if (employee.github) {
+            fs.appendFile("./dist/profiles.html", engineerHTML, function (err) {
+                if (err) {
+                    return reject(err);
+                };
+                
+            });
+        }else {
+            fs.appendFile("./dist/profiles.html", internHTML, function (err) {
+                if (err) {
+                    return reject(err);
+                };
+                
+            });
+        }
+    })
+    fs.appendFile("./dist/profiles.html", finishHTML, function (err) {
+        if (err) {
+            return reject(err);
+        };
+        // return resolve();
+    });
+}
 
 const startHTML = `<!DOCTYPE html>
 <html lang="en">
@@ -79,33 +169,13 @@ const startHTML = `<!DOCTYPE html>
 
     <div class="team-cards">`
 
-const managerHTML = `        <article>
-<h3>${this.name}</h3>
-<p class="manager">Manager</p>
-<p>ID: ${this.id}</p>
-<p>Email: ${this.email} </p>
-<p>Office Number: ${this.office} </p>
-</article>`
 
-const engineerHTML = `        <article>
-<h3>${this.name}</h3>
-<p class="engineer">Engineer</p>
-<p>ID: ${this.id}</p>
-<p>Email: ${this.email} </p>
-<p>GitHub: ${this.github} </p>
-</article>`
-
-const internHTML = `        <article>
-<h3>${this.name}</h3>
-<p class="intern">Intern</p>
-<p>ID: ${this.id}</p>
-<p>Email: ${this.email} </p>
-<p>School: ${this.school} </p>
-</article>`
 
 const finishHTML = `    </div>
 </body>
 
 </html>`
+
+
 
 newEmployee()
