@@ -34,8 +34,8 @@ function newEmployee() {
         ],
         name: 'role',
     }
-    ]) 
-    
+    ])
+
         .then(function (response) {
             data = response
             let classPrompt;
@@ -74,9 +74,9 @@ function newEmployee() {
                         employee = new Intern(data.name, data.id, data.email, data.classInfo)
                     }
                     employees.push(employee);
-                    if(response.another === "Yes") {
+                    if (response.another === "Yes") {
                         newEmployee()
-                    }else {
+                    } else {
                         endHTML()
                     }
                 })
@@ -88,10 +88,10 @@ function endHTML() {
         if (err) {
             return reject(err);
         };
-        
+
     });
-    console.log(employees);
-    employees.forEach(employee => {
+    
+    {employees.forEach(employee => {
         // hard coding the html
         const managerHTML = `        <article>
 <h3>${employee.name}</h3>
@@ -101,7 +101,7 @@ function endHTML() {
 <p>Office Number: ${employee.office} </p>
 </article>`
 
-const engineerHTML = `        <article>
+        const engineerHTML = `        <article>
 <h3>${employee.name}</h3>
 <p class="engineer">Engineer</p>
 <p>ID: ${employee.id}</p>
@@ -109,7 +109,7 @@ const engineerHTML = `        <article>
 <p>GitHub: ${employee.github} </p>
 </article>`
 
-const internHTML = `        <article>
+        const internHTML = `        <article>
 <h3>${employee.name}</h3>
 <p class="intern">Intern</p>
 <p>ID: ${employee.id}</p>
@@ -117,36 +117,37 @@ const internHTML = `        <article>
 <p>School: ${employee.school} </p>
 </article>`
 
-        console.log(employee.name);
+
         if (employee.office) {
             fs.appendFile("./dist/profiles.html", managerHTML, function (err) {
                 if (err) {
                     return reject(err);
                 };
-                
+
             });
         } else if (employee.github) {
             fs.appendFile("./dist/profiles.html", engineerHTML, function (err) {
                 if (err) {
                     return reject(err);
                 };
-                
+
             });
-        }else {
+        } else {
             fs.appendFile("./dist/profiles.html", internHTML, function (err) {
                 if (err) {
                     return reject(err);
                 };
-                
+
             });
         }
-    })
+    })}
+
+
     fs.appendFile("./dist/profiles.html", finishHTML, function (err) {
         if (err) {
             return reject(err);
         };
-        // return resolve();
-    });
+    })
 }
 
 const startHTML = `<!DOCTYPE html>
