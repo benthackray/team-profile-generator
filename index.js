@@ -83,7 +83,7 @@ function newEmployee() {
         })
 }
 
-function endHTML() {
+async function endHTML() {
     fs.writeFile("./dist/profiles.html", startHTML, function (err) {
         if (err) {
             return reject(err);
@@ -143,7 +143,7 @@ function endHTML() {
     })}
 
 
-    fs.appendFile("./dist/profiles.html", finishHTML, function (err) {
+    await fs.appendFile("./dist/profiles.html", finishHTML, function (err) {
         if (err) {
             return reject(err);
         };

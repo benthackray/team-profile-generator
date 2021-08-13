@@ -29,7 +29,11 @@ n/a
 
 ## Tests
 
-n/a
+To start tests, type into the command line 
+```
+npm run test
+```
+
 
 ## Questions
 
