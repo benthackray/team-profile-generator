@@ -17,6 +17,8 @@ After cloning from Github, just run "node index.js" on the integrated terminal a
 
 ## Usage
 
+[Video Walkthrough](https://drive.google.com/file/d/1e6ohuHM8jTGM59nBM2prKGHMpdfNwtuQ/view)
+
 It can be used to organize a team and visualize every member.
 
 ## License

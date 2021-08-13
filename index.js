@@ -83,71 +83,56 @@ function newEmployee() {
         })
 }
 
-async function endHTML() {
-    fs.writeFile("./dist/profiles.html", startHTML, function (err) {
+function endHTML() {
+    let html = startHTML;
+    employees.forEach((employee) => {
+        if (employee.getRole() === "Manager") {
+            html += managerHTML(employee);
+        }
+        if (employee.getRole() === "Engineer") {
+            html += engineerHTML(employee);
+        }
+        if (employee.getRole() === "Intern") {
+            html += internHTML(employee);
+        }
+    })
+    html += finishHTML
+    fs.writeFile("./dist/profiles.html", html, function (err) {
         if (err) {
             return reject(err);
         };
 
     });
-    
-    {employees.forEach(employee => {
-        // hard coding the html
-        const managerHTML = `        <article>
-<h3>${employee.name}</h3>
-<p class="manager">Manager</p>
-<p>ID: ${employee.id}</p>
-<p>Email: ${employee.email} </p>
-<p>Office Number: ${employee.office} </p>
-</article>`
+}
 
-        const engineerHTML = `        <article>
-<h3>${employee.name}</h3>
-<p class="engineer">Engineer</p>
-<p>ID: ${employee.id}</p>
-<p>Email: ${employee.email} </p>
-<p>GitHub: ${employee.github} </p>
-</article>`
+function managerHTML(employee) {
+    return `<article>
+ <h3>${employee.name}</h3>
+ <p class="manager">Manager</p>
+ <p>ID: ${employee.id}</p>
+ <p>Email: ${employee.email} </p>
+ <p>Office Number: ${employee.office} </p>
+ </article>`
+}
 
-        const internHTML = `        <article>
-<h3>${employee.name}</h3>
-<p class="intern">Intern</p>
-<p>ID: ${employee.id}</p>
-<p>Email: ${employee.email} </p>
-<p>School: ${employee.school} </p>
-</article>`
+function engineerHTML(employee) {
+    return `<article>
+     <h3>${employee.name}</h3>
+     <p class="engineer">Engineer</p>
+     <p>ID: ${employee.id}</p>
+     <p>Email: ${employee.email} </p>
+     <p>GitHub: ${employee.github} </p>
+     </article>`
+}
 
-
-        if (employee.office) {
-            fs.appendFile("./dist/profiles.html", managerHTML, function (err) {
-                if (err) {
-                    return reject(err);
-                };
-
-            });
-        } else if (employee.github) {
-            fs.appendFile("./dist/profiles.html", engineerHTML, function (err) {
-                if (err) {
-                    return reject(err);
-                };
-
-            });
-        } else {
-            fs.appendFile("./dist/profiles.html", internHTML, function (err) {
-                if (err) {
-                    return reject(err);
-                };
-
-            });
-        }
-    })}
-
-
-    await fs.appendFile("./dist/profiles.html", finishHTML, function (err) {
-        if (err) {
-            return reject(err);
-        };
-    })
+function internHTML(employee) {
+    return  `<article>
+     <h3>${employee.name}</h3>
+     <p class="intern">Intern</p>
+     <p>ID: ${employee.id}</p>
+     <p>Email: ${employee.email} </p>
+     <p>School: ${employee.school} </p>
+     </article>`
 }
 
 const startHTML = `<!DOCTYPE html>
